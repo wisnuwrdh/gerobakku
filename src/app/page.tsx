@@ -1,13 +1,11 @@
-import { Store, MessageCircle, MapPin } from "lucide-react"
-import { getLatestSeller, getLatestLocation } from "@/lib/actions"
+import { Store, MessageCircle } from "lucide-react"
+import { getLatestSeller } from "@/lib/actions"
 import MapViewPublic from "@/components/MapViewPublic"
-import { timeAgo } from "@/lib/utils"
 
 export const dynamic = "force-dynamic"
 
 export default async function HomePage() {
   const seller = await getLatestSeller()
-  const location = seller ? await getLatestLocation(seller.id) : null
 
   return (
     <div className="h-full flex flex-col">
@@ -28,33 +26,16 @@ export default async function HomePage() {
           </div>
         )}
 
-        <div className="absolute top-3 left-3 right-3 z-[1000]">
-          <div className="bg-white/95 backdrop-blur-md rounded-2xl shadow-lg shadow-zinc-200/50 px-4 py-3 flex items-center gap-3">
+        <div className="absolute top-3 left-3 right-3 z-[1000] pointer-events-none">
+          <div className="bg-white/90 backdrop-blur-md rounded-2xl shadow-lg shadow-zinc-200/50 px-4 py-3 flex items-center gap-3 pointer-events-auto">
             <div className="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center shrink-0">
               <Store className="w-5 h-5 text-orange-500" />
             </div>
             <div className="flex-1 min-w-0">
               <h1 className="font-bold text-zinc-800 text-sm truncate">Gerobakku</h1>
-              {seller ? (
-                <p className="text-xs text-zinc-500 flex items-center gap-1">
-                  {seller.name}
-                  <span className="text-zinc-300">•</span>
-                  {seller.is_active ? (
-                    location ? (
-                      <span className="text-emerald-600">
-                        <MapPin className="w-3 h-3 inline mr-0.5" />
-                        Online {timeAgo(location.created_at)}
-                      </span>
-                    ) : (
-                      <span className="text-zinc-400">Menunggu lokasi...</span>
-                    )
-                  ) : (
-                    <span className="text-amber-600">Terdaftar • belum mulai jualan</span>
-                  )}
-                </p>
-              ) : (
-                <p className="text-xs text-zinc-400">Belum ada gerobak aktif</p>
-              )}
+              <p className="text-xs text-zinc-400">
+                Lihat gerobak terdekat real-time
+              </p>
             </div>
             {seller?.whatsapp && (
               <a

@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, useCallback } from "react"
 import { Circle, MapPin, Play, Square, Loader2 } from "lucide-react"
 import { useTrackerStore, getStoredSeller, clearStoredSeller } from "@/lib/store"
 import { insertLocation, updateSellerStatus, getSeller } from "@/lib/actions"
+import { calculateDistance } from "@/lib/utils"
 import { SellerForm } from "./SellerForm"
 import { Button } from "@/components/ui/Button"
 import { Card } from "@/components/ui/Card"
@@ -36,12 +37,23 @@ export function TrackerControls() {
     })
   }, [setSellerInfo])
 
+  const lastCoordsRef = useRef<{ lat: number; lng: number } | null>(null)
+
   const sendLocation = useCallback(
     async (lat: number, lng: number, speed: number | null, accuracy: number | null) => {
       if (!sellerId) return
+      if (accuracy != null && accuracy > 50) return
+
       const now = Date.now()
       if (now - lastSentRef.current < 4000) return
+
+      if (lastCoordsRef.current) {
+        const dist = calculateDistance(lastCoordsRef.current.lat, lastCoordsRef.current.lng, lat, lng)
+        if (dist < 0.005) return
+      }
+
       lastSentRef.current = now
+      lastCoordsRef.current = { lat, lng }
 
       try {
         await insertLocation(sellerId, lat, lng, speed, accuracy)

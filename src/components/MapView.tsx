@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import { MapContainer, Marker, Popup, Polyline, useMap } from "react-leaflet"
+import { MapContainer, Marker, Popup, Polyline, TileLayer, useMap } from "react-leaflet"
 import L from "leaflet"
 import { Store, Lock, Unlock, MapPin } from "lucide-react"
 import { useRealtimeLocation } from "@/lib/use-realtime-location"
@@ -162,6 +162,11 @@ function MapContent({
 
   return (
     <>
+      <TileLayer
+        attribution='&copy; <a href="https://carto.com/">CARTO</a>'
+        url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+      />
+
       {pathPositions.length > 1 && (
         <>
           <Polyline
