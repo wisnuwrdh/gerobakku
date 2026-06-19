@@ -7,7 +7,11 @@ export function getServerSupabase() {
 
   if (!url || !anonKey) return null
 
-  return createClient<Database>(url, anonKey, {
-    auth: { persistSession: false },
-  })
+  try {
+    return createClient<Database>(url, anonKey, {
+      auth: { persistSession: false },
+    })
+  } catch {
+    return null
+  }
 }
