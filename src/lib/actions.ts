@@ -6,6 +6,7 @@ import type { Seller, Location } from "@/types"
 
 export async function createSeller(name: string, whatsapp: string) {
   const supabase = getServerSupabase()
+  if (!supabase) throw new Error("Supabase belum dikonfigurasi")
   const { data, error } = await supabase
     .from("sellers")
     .insert({ name, whatsapp: whatsapp || null, is_active: false })
@@ -18,6 +19,7 @@ export async function createSeller(name: string, whatsapp: string) {
 
 export async function updateSellerStatus(sellerId: string, isActive: boolean) {
   const supabase = getServerSupabase()
+  if (!supabase) return
   const { error } = await supabase
     .from("sellers")
     .update({ is_active: isActive })
@@ -35,6 +37,7 @@ export async function insertLocation(
   accuracy: number | null
 ) {
   const supabase = getServerSupabase()
+  if (!supabase) return
   const { error } = await supabase
     .from("locations")
     .insert({
@@ -50,6 +53,7 @@ export async function insertLocation(
 
 export async function getActiveSeller(): Promise<Seller | null> {
   const supabase = getServerSupabase()
+  if (!supabase) return null
   const { data, error } = await supabase
     .from("sellers")
     .select("*")
@@ -67,6 +71,7 @@ export async function getSellerLocations(
   limit = 500
 ): Promise<Location[]> {
   const supabase = getServerSupabase()
+  if (!supabase) return []
   const today = new Date()
   today.setHours(0, 0, 0, 0)
 
@@ -86,6 +91,7 @@ export async function getLatestLocation(
   sellerId: string
 ): Promise<Location | null> {
   const supabase = getServerSupabase()
+  if (!supabase) return null
   const { data, error } = await supabase
     .from("locations")
     .select("*")

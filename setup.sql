@@ -32,12 +32,6 @@ CREATE TABLE locations (
 CREATE INDEX idx_locations_seller_date
   ON locations(seller_id, created_at DESC);
 
--- Locations: partial index for recent data (today's data only)
--- Useful for realtime dashboard queries
-CREATE INDEX idx_locations_today
-  ON locations(seller_id, created_at)
-  WHERE created_at >= CURRENT_DATE;
-
 -- Sellers: fast lookup for active sellers
 CREATE INDEX idx_sellers_active
   ON sellers(is_active)
