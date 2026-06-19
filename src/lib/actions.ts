@@ -51,6 +51,34 @@ export async function insertLocation(
   if (error) throw new Error(error.message)
 }
 
+export async function getSeller(sellerId: string): Promise<Seller | null> {
+  const supabase = getServerSupabase()
+  if (!supabase) return null
+  const { data, error } = await supabase
+    .from("sellers")
+    .select("*")
+    .eq("id", sellerId)
+    .single()
+
+  if (error || !data) return null
+  return data as Seller
+}
+
+export async function getLatestSeller(): Promise<Seller | null> {
+  const supabase = getServerSupabase()
+  if (!supabase) return null
+  const { data, error } = await supabase
+    .from("sellers")
+    .select("*")
+    .order("is_active", { ascending: false })
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .maybeSingle()
+
+  if (error || !data) return null
+  return data as Seller
+}
+
 export async function getActiveSeller(): Promise<Seller | null> {
   const supabase = getServerSupabase()
   if (!supabase) return null

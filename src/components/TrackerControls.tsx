@@ -1,9 +1,9 @@
 "use client"
 
 import { useEffect, useRef, useState, useCallback } from "react"
-import { Circle, MapPin, Play, Square } from "lucide-react"
-import { useTrackerStore } from "@/lib/store"
-import { insertLocation, updateSellerStatus } from "@/lib/actions"
+import { Circle, MapPin, Play, Square, Loader2 } from "lucide-react"
+import { useTrackerStore, getStoredSeller, clearStoredSeller } from "@/lib/store"
+import { insertLocation, updateSellerStatus, getSeller } from "@/lib/actions"
 import { SellerForm } from "./SellerForm"
 import { Button } from "@/components/ui/Button"
 import { Card } from "@/components/ui/Card"
@@ -13,8 +13,28 @@ export function TrackerControls() {
     useTrackerStore()
   const [status, setStatus] = useState("")
   const [error, setError] = useState("")
+  const [restoringSession, setRestoringSession] = useState(true)
   const watchIdRef = useRef<number | null>(null)
   const lastSentRef = useRef(0)
+
+  useEffect(() => {
+    const stored = getStoredSeller()
+    if (!stored) {
+      setRestoringSession(false)
+      return
+    }
+
+    getSeller(stored.id).then((seller) => {
+      if (seller) {
+        setSellerInfo(seller.id, seller.name, seller.whatsapp || "")
+      } else {
+        clearStoredSeller()
+      }
+      setRestoringSession(false)
+    }).catch(() => {
+      setRestoringSession(false)
+    })
+  }, [setSellerInfo])
 
   const sendLocation = useCallback(
     async (lat: number, lng: number, speed: number | null, accuracy: number | null) => {
@@ -81,6 +101,15 @@ export function TrackerControls() {
       await updateSellerStatus(sellerId, false)
     }
     setStatus("Berhenti tracking")
+  }
+
+  if (restoringSession) {
+    return (
+      <Card className="p-6 flex items-center justify-center gap-3">
+        <Loader2 className="w-5 h-5 text-orange-500 animate-spin" />
+        <span className="text-sm text-zinc-500">Memulihkan sesi...</span>
+      </Card>
+    )
   }
 
   if (!sellerId) {

@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { Store } from "lucide-react"
 import { createSeller } from "@/lib/actions"
+import { setStoredSeller } from "@/lib/store"
 import { Button } from "@/components/ui/Button"
 import { Input } from "@/components/ui/Input"
 import { Card, CardHeader, CardTitle } from "@/components/ui/Card"
@@ -24,7 +25,9 @@ export function SellerForm({ onRegister }: Props) {
 
     try {
       const seller = await createSeller(name.trim(), whatsapp.trim())
-      onRegister(seller.id, seller.name, seller.whatsapp || "")
+      const sellerWhatsapp = seller.whatsapp || ""
+      setStoredSeller(seller.id, seller.name, sellerWhatsapp)
+      onRegister(seller.id, seller.name, sellerWhatsapp)
     } catch (e: any) {
       setError(e.message || "Gagal mendaftar, coba lagi")
     } finally {

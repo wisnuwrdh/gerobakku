@@ -1,12 +1,12 @@
 import { Store, MessageCircle, MapPin } from "lucide-react"
-import { getActiveSeller, getLatestLocation } from "@/lib/actions"
+import { getLatestSeller, getLatestLocation } from "@/lib/actions"
 import MapViewPublic from "@/components/MapViewPublic"
 import { timeAgo } from "@/lib/utils"
 
 export const dynamic = "force-dynamic"
 
 export default async function HomePage() {
-  const seller = await getActiveSeller()
+  const seller = await getLatestSeller()
   const location = seller ? await getLatestLocation(seller.id) : null
 
   return (
@@ -20,9 +20,9 @@ export default async function HomePage() {
               <div className="inline-flex items-center justify-center w-20 h-20 bg-orange-100 rounded-full mb-4">
                 <Store className="w-10 h-10 text-orange-400" />
               </div>
-              <h1 className="text-xl font-bold text-zinc-800 mb-2">Belum Ada Gerobak Aktif</h1>
+              <h1 className="text-xl font-bold text-zinc-800 mb-2">Belum Ada Gerobak</h1>
               <p className="text-zinc-500 text-sm">
-                Pedagang belum mulai jualan nih. Coba cek lagi nanti ya!
+                Belum ada pedagang yang terdaftar. Yuk daftar dulu di halaman /track!
               </p>
             </div>
           </div>
@@ -39,13 +39,17 @@ export default async function HomePage() {
                 <p className="text-xs text-zinc-500 flex items-center gap-1">
                   {seller.name}
                   <span className="text-zinc-300">•</span>
-                  {location ? (
-                    <span className="text-emerald-600">
-                      <MapPin className="w-3 h-3 inline mr-0.5" />
-                      Online {timeAgo(location.created_at)}
-                    </span>
+                  {seller.is_active ? (
+                    location ? (
+                      <span className="text-emerald-600">
+                        <MapPin className="w-3 h-3 inline mr-0.5" />
+                        Online {timeAgo(location.created_at)}
+                      </span>
+                    ) : (
+                      <span className="text-zinc-400">Menunggu lokasi...</span>
+                    )
                   ) : (
-                    <span className="text-zinc-400">Menunggu lokasi...</span>
+                    <span className="text-amber-600">Terdaftar • belum mulai jualan</span>
                   )}
                 </p>
               ) : (
