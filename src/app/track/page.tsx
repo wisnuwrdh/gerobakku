@@ -2,6 +2,8 @@ import { Store, HelpCircle, Smartphone } from "lucide-react"
 import { TrackerControls } from "@/components/TrackerControls"
 import { Card } from "@/components/ui/Card"
 
+export const dynamic = "force-dynamic"
+
 export default function TrackPage() {
   return (
     <div className="h-full flex flex-col">

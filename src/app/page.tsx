@@ -3,6 +3,8 @@ import { getActiveSeller, getLatestLocation } from "@/lib/actions"
 import MapViewPublic from "@/components/MapViewPublic"
 import { timeAgo } from "@/lib/utils"
 
+export const dynamic = "force-dynamic"
+
 export default async function HomePage() {
   const seller = await getActiveSeller()
   const location = seller ? await getLatestLocation(seller.id) : null

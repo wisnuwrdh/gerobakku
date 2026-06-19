@@ -3,6 +3,8 @@ import { formatTime, calculateDistance, formatDistance } from "@/lib/utils"
 import { Card, CardHeader, CardTitle } from "@/components/ui/Card"
 import { FileText, Route, Play, StopCircle, Inbox } from "lucide-react"
 
+export const dynamic = "force-dynamic"
+
 export default async function DashboardPage() {
   const seller = await getActiveSeller()
   const locations = seller ? await getSellerLocations(seller.id) : []
