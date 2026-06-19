@@ -13,7 +13,7 @@ export default async function HomePage() {
     <div className="h-full flex flex-col">
       <div className="flex-1 relative">
         {seller ? (
-          <MapViewPublic sellerId={seller.id} />
+          <MapViewPublic sellerId={seller.id} sellerName={seller.name} />
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-zinc-100">
             <div className="text-center px-6">

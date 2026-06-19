@@ -33,6 +33,15 @@ export function calculateDistance(
 }
 
 export function formatDistance(km: number): string {
+  if (km < 0.01) return "0 m"
   if (km < 1) return `${Math.round(km * 1000)} m`
   return `${km.toFixed(1)} km`
+}
+
+export function formatDuration(ms: number): string {
+  if (ms <= 0) return "0m"
+  const hours = Math.floor(ms / 3600000)
+  const minutes = Math.floor((ms % 3600000) / 60000)
+  if (hours > 0) return `${hours}j ${minutes}m`
+  return `${minutes}m`
 }
